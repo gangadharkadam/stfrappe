@@ -13,7 +13,7 @@ def formated_date(date_str):
 	 
 @frappe.whitelist()
 def get_data(from_date=None,to_date=None,currency=None):
-	frappe.errprint(currency)
+	frappe.errprint("in the get_data")
 	data_dict = {'cols':'name ,net_total', 'tab':'`tabSales Order`', 'cond_col': 'delivery_date','cncy':'currency'}
 	make_cond(data_dict, from_date, to_date,currency)				
 	return{
@@ -30,31 +30,52 @@ def get_jv_data(from_date=None,to_date=None):
 	
 
 def make_cond(data_dict, from_date=None,to_date=None,currency=None):
-	if from_date and to_date:
-		data_dict['cond'] = """ where %(cond_col)s between '%(from_date)s' and '%(to_date)s and %(cncy)s= '%(currency)s'
+	if from_date and to_date and currency:
+		frappe.errprint("in the else")
+		data_dict['cond'] = """ where %(cond_col)s between '%(from_date)s' and '%(to_date)s' and %(cncy)s = '%(currency)s'
 			"""%{'cond_col': data_dict.get('cond_col'), 'from_date': formated_date(from_date),
 					'to_date': formated_date(to_date),'currency':currency, 'cncy':data_dict.get('cncy')}
+
+	elif from_date and to_date:
+		data_dict['cond'] = """ where %(cond_col)s between '%(from_date)s' and '%(to_date)s' 
+			"""%{'cond_col': data_dict.get('cond_col'), 'from_date': formated_date(from_date),
+					'to_date': formated_date(to_date)}
 	else:
 		data_dict['cond'] = ' '
 
 def make_query(data_dict):
-	return frappe.db.sql("select %(cols)s from %(tab)s %(cond)s"%data_dict)
+	frappe.errprint("in the get_data")
+	frappe.errprint("select %(cols)s from %(tab)s %(cond)s"%data_dict)
+	return frappe.db.sql("select %(cols)s from %(tab)s %(cond)s"%data_dict,debug=1)
 
 @frappe.whitelist()
 def get_activities():
-	dbname=frappe.db.sql("""select site_name from `tabSubAdmin Info` where active=1""",as_dict=1)
-	lst=[]
-	qry_srt='select subject,site_name from('
-	for key in dbname:
-		temp =key['site_name']
-		qry="SELECT subject,creation,'%s' as site_name FROM "%(temp)
-		if temp :
-			qry+=temp+'.tabFeed'
-			lst.append(qry)
-	fin_qry=' UNION '.join(lst)
-	qry=qry_srt+fin_qry+" where doc_name='Administrator')foo ORDER BY creation DESC limit 5"
-	act_details=frappe.db.sql(fin_qry,as_dict=1)
-	return act_details
+	from frappe.utils import get_url, cstr
+	frappe.errprint(get_url())
+	if get_url()=='http://smarttailor':
+		frappe.errprint("in the get_activities")
+		dbname=frappe.db.sql("""select site_name from `tabSubAdmin Info` where active=1""",as_dict=1)
+		frappe.errprint("dbname")
+		lst=[]
+		qry_srt='select feed_type,subject,site_name,creation from('
+		for key in dbname:
+			frappe.errprint("key")
+			temp =key['site_name']
+			qry="SELECT subject,creation,feed_type,'%s' as site_name FROM "%(temp)
+			if temp :
+				qry+=temp+'.tabFeed'
+				lst.append(qry)
+		fin_qry=' UNION '.join(lst)
+		frappe.errprint("fin qry")
+		qry=qry_srt+fin_qry+" where doc_name='Administrator')foo ORDER BY creation desc limit 10"
+		frappe.errprint(qry)
+		act_details=frappe.db.sql(fin_qry,as_dict=1)
+		frappe.errprint(act_details)
+		if act_details:
+			 frappe.errprint(act_details)
+			 return act_details
+		else:
+			 return ' '	
 
 
 @frappe.whitelist()
@@ -86,23 +107,19 @@ def get_prospect(from_date=None,to_date=None):
 		return{
 		"order_total": prospect_details
 	    }
-	# else:
-	# 	str1="select date_format(creation,'%M') as month,count(*) as lead from `tabLead` order by month"
-	# 	sales_details=frappe.db.sql(str1,debug=1)
-	# 	return{
-	# 	"order_total": sales_details
-	#     }	    
+	else:
+		str1="select date_format(creation,'%M') as month,count(*) as lead from `tabLead` order by month"
+		sales_details=frappe.db.sql(str1,debug=1)
+		return{
+		"order_total": sales_details
+	    }	    
 
 
 @frappe.whitelist()
 def get_subscription(from_date=None,to_date=None):
 	frappe.errprint("in the get_subscription py")
-	#frappe.errprint(from_date)
-	#frappe.errprint(to_date)
-	#frappe.errprint("calling ")
 	if from_date and to_date:
 		str2="select name,EXTRACT(month FROM expiry_date) as expiry_date  from `tabSite Master` where expiry_date between '2013-12-25' and '2015-12-25'"
-		#frappe.errprint(str2)
 		subscription_details=frappe.db.sql(str2,as_list=1)
 		frappe.errprint(subscription_details)
 		return{
@@ -110,7 +127,6 @@ def get_subscription(from_date=None,to_date=None):
 	    }
 	else:
 		str2="select name,EXTRACT(month FROM expiry_date) as expiry_date  from `tabSite Master` where expiry_date is not null"
-		#frappe.errprint(str2)
 		subscription_details=frappe.db.sql(str2,as_list=1)
 		frappe.errprint(subscription_details)
 		return{

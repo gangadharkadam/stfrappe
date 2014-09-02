@@ -18,6 +18,11 @@ from frappe.utils.fixtures import sync_fixtures
 def install_db(root_login="root", root_password=None, db_name=None, source_sql=None,
 	admin_password = 'admin', verbose=True, force=0, site_config=None, reinstall=False):
 	frappe.flags.in_install_db = True
+	db_name=db_name[:16]
+	if "." in db_name: 
+		dn=db_name.split('.')
+		db_name=dn[0]
+	frappe.errprint(db_name)
 	make_conf(db_name, site_config=site_config)
 	if reinstall:
 		frappe.connect(db_name=db_name)
@@ -39,6 +44,10 @@ def install_db(root_login="root", root_password=None, db_name=None, source_sql=N
 
 def create_database_and_user(force, verbose):
 	db_name = frappe.local.conf.db_name
+	db_name=db_name[:16]
+	if "." in db_name: 
+		dn=db_name.split('.')
+		db_name=dn[0]
 	dbman = DbManager(frappe.local.db)
 	#print db_name
 	#print dbman.get_database_list()
@@ -150,12 +159,20 @@ def set_all_patches_as_completed(app):
 
 def make_conf(db_name=None, db_password=None, site_config=None):
 	site = frappe.local.site
+	db_name=db_name[:16]
+	if "." in db_name: 
+		dn=db_name.split('.')
+		db_name=dn[0]
 	make_site_config(db_name, db_password, site_config)
 	sites_path = frappe.local.sites_path
 	frappe.destroy()
 	frappe.init(site, sites_path=sites_path)
 
 def make_site_config(db_name=None, db_password=None, site_config=None):
+	db_name=db_name[:16]
+	if "." in db_name: 
+		dn=db_name.split('.')
+		db_name=dn[0]
 	frappe.create_folder(os.path.join(frappe.local.site_path))
 	site_file = os.path.join(frappe.local.site_path, "site_config.json")
 

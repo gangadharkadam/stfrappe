@@ -156,7 +156,7 @@ def multitenanct(from_test=False):
    if res:
 	sites=''
 	sites = frappe.db.sql("""select sites from  `tabUser` where name='administrator'""")
-	print sites
+	#print sites
 	auto_commit = not from_test
 	ste=res[0][0]
 	from frappe.utils import cstr  
@@ -171,7 +171,7 @@ def multitenanct(from_test=False):
         cmd='bench new-site '+ste
 	 
 	sites=cstr(sites[0][0])+' '+ste
-	print sites
+	#print sites
 	frappe.db.sql("update `tabUser` set sites= %s where name='administrator'",sites)
         try:
 		subprocess.check_call(cmd, cwd=cwd, shell=True)
@@ -247,6 +247,22 @@ def multitenanct(from_test=False):
 	with open("/home/gangadhar/workspace/smarttailor/frappe-bench/config/hosts","w") as hosts_file:
 			hosts_file.write(host)
         os.system('echo indictrans | sudo -S cp /home/gangadhar/workspace/smarttailor/frappe-bench/config/hosts /etc/hosts')
-	qry="update `tabSite Master` set flag=1 where name='"+cstr(res[0][0])+"'"
+    	from frappe.utils import nowdate,add_months,cint
+    	en_dt=add_months(nowdate(),1)
+	qry="update `tabSite Master` set flag=1 ,expiry_date='"+en_dt+"' where name='"+cstr(res[0][0])+"'"
+	#frappe.errprint(qry)
 	frappe.db.sql(qry, auto_commit=auto_commit)
-        
+	qry1="select email_id__if_administrator from `tabSite Master` where name='"+cstr(ste)+"'"
+	#frappe.errprint(qry1)
+	rr=frappe.db.sql(qry1)
+	#frappe.errprint(rr[0][0])
+	eml=rr and rr[0][0] or ''
+	#frappe.errprint(eml)
+	frappe.get_doc({
+			"doctype":"SubAdmin Info",
+			"parent": "SUB0001",
+			"parentfield": "subadmins_information",
+			"parenttype":"Admin Details",
+			"admin": eml,
+			"site_name":ste
+		}).insert()

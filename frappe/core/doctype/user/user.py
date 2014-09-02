@@ -125,7 +125,6 @@ class User(Document):
 		self.send_login_mail("Password Reset", "templates/emails/password_reset.html", {"link": link})
 
 	def password_update_mail(self, password):
-		self.send_login_mail2("Verify Your Account","httt/test")
 		self.send_login_mail("Password Update", "templates/emails/password_update.html", {"new_password": password})
 
 	def send_welcome_mail(self):
@@ -314,7 +313,7 @@ def get_languages():
 def get_all_roles(arg=None):
 	"""return all roles"""
 	return [r[0] for r in frappe.db.sql("""select name from tabRole
-		where name not in ('Administrator', 'Guest', 'All') order by name""")]
+		where name not in ('Administrator', 'Guest', 'All','Super Admin') order by name""")]
 
 @frappe.whitelist()
 def get_user_roles(arg=None):

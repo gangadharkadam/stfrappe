@@ -28,6 +28,12 @@
    "set_only_once": 0
   }, 
   {
+   "fieldname": "db_name", 
+   "fieldtype": "Data", 
+   "label": "Db Name", 
+   "permlevel": 0
+  }, 
+  {
    "allow_on_submit": 0, 
    "fieldname": "admin", 
    "fieldtype": "Data", 
@@ -71,7 +77,7 @@
  "is_submittable": 0, 
  "issingle": 0, 
  "istable": 1, 
- "modified": "2014-08-11 15:31:57.875136", 
+ "modified": "2014-08-31 11:02:41.676883", 
  "modified_by": "Administrator", 
  "module": "Core", 
  "name": "SubAdmin Info", 

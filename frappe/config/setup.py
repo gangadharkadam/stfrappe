@@ -52,9 +52,10 @@ def get_data():
 					"is_query_report": True,
 					"doctype": "User",
 					"icon": "icon-eye-open",
-					"name": "Subscribers Activity",
-					"description": _("Check Subscribers Activity ")
+					"name": "Active Users",
+					"description": _("Check which User are logged in today")
 				},
+				
 				{
 					"type": "report",
 					"is_query_report": True,

@@ -75,10 +75,23 @@ cur_frm.cscript.refresh = function(doc) {
 }
 
 cur_frm.cscript.enabled = function(doc) {
+
 	if(!doc.__islocal && has_common(user_roles, ["Administrator", "System Manager"])) {
 		cur_frm.toggle_display(['sb1', 'sb3'], doc.enabled);
 		cur_frm.toggle_enable('*', doc.enabled);
 		cur_frm.set_df_property('enabled', 'read_only', 0);
+		if (doc.enabled){
+			
+		frappe.call({
+			method: "erpnext.support.doctype.support_ticket.support_ticket.reenable",
+			args: {
+				name: cur_frm.doc.name
+			},
+			callback: function(r) {
+				
+			}
+		})
+	   }
 	}
 
 	if(user!="Administrator") {
