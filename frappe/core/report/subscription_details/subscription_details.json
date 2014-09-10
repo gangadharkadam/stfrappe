@@ -6,13 +6,13 @@
  "docstatus": 0, 
  "doctype": "Report", 
  "is_standard": "Yes", 
- "modified": "2014-09-02 11:18:05.048422", 
+ "modified": "2014-09-07 17:47:21.625683", 
  "modified_by": "Administrator", 
  "module": "Core", 
  "name": "Subscription Details", 
  "owner": "Administrator", 
- "query": "select name as `Site Name`, DATE(creation) as `Creation Date`,client_name as `Customer Name`,expiry_date as `Renewal Date`,country as Country,email_id__if_administrator as `Administrator Email Id`from `tabSite Master` order by creation asc", 
+ "query": "select name as `Site Name`, DATE(creation) as `Creation Date`,client_name as `Customer Name`,DATE(expiry_date) as `Renewal Date`,country as Country,email_id__if_administrator as `Administrator Email Id` from `tabSite Master` order by creation asc", 
  "ref_doctype": "Site Master", 
  "report_name": "Subscription Details", 
- "report_type": "Query Report"
+ "report_type": "Script Report"
 }

@@ -74,14 +74,17 @@ cur_frm.cscript.refresh = function(doc) {
 	}
 }
 
-cur_frm.cscript.enabled = function(doc) {
+this.frm.fields_dict.add_validity.get_query = function(doc, cdt, cdn) {
+			return { query:"frappe.core.doctype.user.user.user_query1"} }
 
+
+cur_frm.cscript.enabled = function(doc) {
 	if(!doc.__islocal && has_common(user_roles, ["Administrator", "System Manager"])) {
 		cur_frm.toggle_display(['sb1', 'sb3'], doc.enabled);
 		cur_frm.toggle_enable('*', doc.enabled);
 		cur_frm.set_df_property('enabled', 'read_only', 0);
-		if (doc.enabled){
-			
+/*		alert("enabled");
+		if (doc.enabled){			
 		frappe.call({
 			method: "erpnext.support.doctype.support_ticket.support_ticket.reenable",
 			args: {
@@ -91,7 +94,7 @@ cur_frm.cscript.enabled = function(doc) {
 				
 			}
 		})
-	   }
+	   }*/
 	}
 
 	if(user!="Administrator") {

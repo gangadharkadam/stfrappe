@@ -1,0 +1,21 @@
+{
+ "content": null, 
+ "creation": "2014-09-05 16:46:23.777217", 
+ "docstatus": 0, 
+ "doctype": "Page", 
+ "modified": "2014-09-07 18:43:55.587842", 
+ "modified_by": "Administrator", 
+ "module": "Core", 
+ "name": "mail_ticker_manager", 
+ "owner": "Administrator", 
+ "page_name": "mail_ticker_manager", 
+ "roles": [
+  {
+   "role": "Super Admin"
+  }
+ ], 
+ "script": null, 
+ "standard": "Yes", 
+ "style": null, 
+ "title": "Mail & Ticker Manager"
+}

@@ -6,7 +6,7 @@
  "docstatus": 0, 
  "doctype": "Report", 
  "is_standard": "Yes", 
- "modified": "2014-09-02 13:51:52.108386", 
+ "modified": "2014-09-07 17:10:42.462745", 
  "modified_by": "Administrator", 
  "module": "Core", 
  "name": "Idle Users", 
@@ -14,5 +14,5 @@
  "query": "select name as `name`,DATE(creation) as `Creation`,DATE(last_login) as 'Last Login' from  `tabUser` where name not in (select name from  `tabUser` where DATE(last_login) = CURDATE() ) ", 
  "ref_doctype": "User", 
  "report_name": "Idle Users", 
- "report_type": "Query Report"
+ "report_type": "Script Report"
 }

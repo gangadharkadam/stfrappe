@@ -6,13 +6,13 @@
  "docstatus": 0, 
  "doctype": "Report", 
  "is_standard": "Yes", 
- "modified": "2014-09-02 13:51:25.555882", 
+ "modified": "2014-09-07 17:27:02.362411", 
  "modified_by": "Administrator", 
  "module": "Core", 
  "name": "Active Users", 
  "owner": "Administrator", 
- "query": "select name as `User`  ,DATE(creation) as `Creation`,DATE(last_login) as 'Last Login' from  `tabUser`  where DATE(last_login) = CURDATE() ", 
+ "query": "select name as `User` ,DATE(creation) as `Creation`,DATE(last_login) as 'Last Login' from  `tabUser`  where DATE(last_login) = CURDATE() ", 
  "ref_doctype": "User", 
  "report_name": "Active Users", 
- "report_type": "Query Report"
+ "report_type": "Script Report"
 }

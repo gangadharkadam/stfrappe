@@ -1,5 +1,4 @@
 
-
 // frappe.require("/core/page/graphical_chart/api.js");
 
 frappe.pages['graphical-chart'].onload = function(wrapper) {
@@ -17,26 +16,6 @@ $("<table class='table table-bordered' style='height:150px; width:800px;'>\
 	</td><td width='50%'><div class='user-settings' style='min-height: 150px;' id ='column_tab' ></div></td>\
 	</tr>\
 	</table>").appendTo($(wrapper).find(".layout-main-section"));
-
-//for heading
-$('<div id="head" style="height:20px; width:800px;" ><b>Revenue Details</tr></table></div>').appendTo($(wrapper).find('.layout-main-section'));
-
-//for filters
-$('<div id="main" style="height:50px; width:800px;" >\
-	<table class="table" style="height:5px; width:800px;" >\
-	<tr width="100%"><td width="25%" style="min-height:20px;"><div id ="ctab" text-align="left" style="min-height: 10px;" ></div></td>\
-	<td width="25%"><div id ="ctab1" text-align="left" style="min-height: 10px;" ></div></td>\
-	<td width="25%"><div id ="ctab2" style="min-height: 10px;" ></div></td>\
-	<td width="25%"><div id ="ctab3" style="min-height: 10px;" ></div></td>\
-	</tr></table></div>').appendTo($(wrapper).find('.layout-main-section'));
-
-//for chart
-$("<table class='table table-bordered' style='height:150px; width:800px;'>\
-	<tr width='100%'><td width='50%'>\
-	<div class='user-settings'  id ='pie_tab2'  style='min-height: 150px;'></div></td>\
-	<td width='50%'><div class='user-settings'  id ='column_tab2'  style='min-height: 150px;'></div></td>\
-	</tr>\
-	</table>").appendTo($(wrapper).find('.layout-main-section'));
 
 //for heading
 $('<div id="head" style="height:20px; width:800px;" ><b>Prospects Details</tr></table></div>').appendTo($(wrapper).find('.layout-main-section'));
@@ -66,7 +45,6 @@ $('<div id="main" style="height:50px; width:800px;" >\
 	<td width="25%"><div id ="ctab344" style="min-height: 10px;" ></div></td>\
 	</tr></table></div>').appendTo($(wrapper).find('.layout-main-section'));
 
-
 //for chart
 $("<table class='table table-bordered' style='height:150px; width:800px;'>\
 	<tr width='100%'><td width='50%'>\
@@ -88,12 +66,11 @@ $('<div id="main" style="height:50px; width:800px;" >\
 	<td width="25%"><div id ="ctab355" style="min-height: 10px;" ></div></td>\
 	</tr></table></div>').appendTo($(wrapper).find('.layout-main-section'));
 
-
 //for fifth chart
 $("<table class='table table-bordered' style='height:40px; width:800px;'>\
-	<tr width='100%'><td width='50%'>\
+	<tr width='100%'><td width='40%'>\
 	<div class='user-settings'  id ='pie_tab5' style='min-height: 180px;'></div></td>\
-	<td width='50%'><div class='user-settings'  id ='column_tab5'  style='min-height: 200px;'></div></td>\
+	<td width='60%'><div class='user-settings'  id ='column_tab5'  style='min-height: 200px;'></div></td>\
 	</tr>\
 	</table>").appendTo($(wrapper).find('.layout-main-section'));
 //for side section
@@ -106,16 +83,13 @@ frappe.Chart = Class.extend({
 	init: function(wrapper) {
 		this.wrapper = wrapper;
 		this.body = $(this.wrapper).find(".user-settings");
+		//for sales
 		this.make_link();
-		this.make_revenue_menu();
-		// this.make_menu();
 		this.make_menu2();
 		this.make_menu4();
 		this.make_menu5();
 		this.make_pie_chart()
 		this.make_column_chart()
-		this.make_pie_chart2()
-		this.make_column_chart2()
 		this.make_pie_chart3()
 		this.make_column_chart3()
 		this.make_pie_chart4()
@@ -124,19 +98,16 @@ frappe.Chart = Class.extend({
 		this.make_column_chart5()
 		this.show_active_users()
 	
-		// $(this.wrapper).find('.layout-main-section').css({"height": "100px"});
-		// $(this.wrapper).find('.layout-main').css("width","700px");
-		// $("<html><head>Hi</head></html>").appendTo($(wrapper).find('.layout-side-section'));
-
 		},
-	make_pie_chart:function(from_date,to_date,currency){
+	make_pie_chart:function(from_date,to_date,currency,country){
 		console.log("in the fun");
 		frappe.call({
-			method:"frappe.core.page.graphical_chart.graphical_chart.get_data",
+			method:"frappe.core.page.graphical_chart.graphical_chart.get_sales_pie",
 			args: {
 					from_date:from_date,
 					to_date:to_date,
-					currency:currency
+					currency:currency,
+					country:country,
 				},
 			callback: function(r) {
 				console.log(r.message);
@@ -159,13 +130,14 @@ frappe.Chart = Class.extend({
 	    });
 		},
 
-	make_column_chart:function(from_date,to_date,currency){
+	make_column_chart:function(from_date,to_date,currency,country){
 		    frappe.call({
-			method:"frappe.core.page.graphical_chart.graphical_chart.get_data",
+			method:"frappe.core.page.graphical_chart.graphical_chart.get_sales_column",
 			args: {
-					from_date:from_date,
+	                from_date:from_date,
 					to_date:to_date,
-					currency:currency
+					currency:currency,
+					country:country,
 				},
 			callback: function(r) {
 				console.log(typeof(r.message));
@@ -173,7 +145,7 @@ frappe.Chart = Class.extend({
 		    google.load('visualization', '1', options);
 		    // google.setOnLoadCallback(drawChart);
 		    function drawChart() {
-		  	 mydata=[['sales','Expenses']];
+		  	 mydata=[['Month','Sales','Revenue']];
 		  	 // console.log(r.message.sales_order_total[0]);
 		  	 for(var x in r.message.sales_order_total){
   				mydata.push(r.message.sales_order_total[x]);
@@ -181,7 +153,7 @@ frappe.Chart = Class.extend({
                // console.log(mydata)
 		    var data = google.visualization.arrayToDataTable(mydata);
 		    var options = {
-		      title: 'Sales Activities'
+		      title: 'Sales/Revenue Activities'
 		    };
 		    var chart = new google.visualization.ColumnChart(document.getElementById("column_tab"));
 		    chart.draw(data, options);
@@ -189,16 +161,77 @@ frappe.Chart = Class.extend({
 		    }
 	    });
 	},
-		make_pie_chart3:function(from_date,to_date){
+		make_pie_chart3:function(from_date,to_date,country){
+		console.log("in the fun");
+		frappe.call({
+			method:"frappe.core.page.graphical_chart.graphical_chart.get_pros",
+			args: {
+					from_date:from_date,
+					to_date:to_date,
+					country:country
+				},
+			callback: function(r) {
+				console.log(r.message);
+			var options = {packages: ['corechart'], callback : drawChart};
+		    google.load('visualization', '1', options);
+		    function drawChart() {
+		  	 mydata=[['Month','Prospects Sale']];
+		   	 for(var x in r.message.order_total){
+  				mydata.push(r.message.order_total[x]);
+               }
+               // console.log(mydata)
+		    var data = google.visualization.arrayToDataTable(mydata);
+		    var options = {
+		      title: 'Prospects Sale'
+		    };
+		    var chart = new google.visualization.PieChart(document.getElementById('pie_tab3'));
+		    chart.draw(data, options);
+		  }
+		  	}
+	    });
+		},
+
+	make_column_chart3:function(from_date,to_date,country){
+		    frappe.call({
+			method:"frappe.core.page.graphical_chart.graphical_chart.get_pros",
+			args: {
+					from_date:from_date,
+					to_date:to_date,
+					country:country
+				},
+			callback: function(r) {
+			console.log(r.message);
+			var options = {packages: ['corechart'], callback : drawChart};
+		    google.load('visualization', '1', options);
+		    // google.setOnLoadCallback(drawChart);
+		    function drawChart() {
+		  	 mydata=[['Month','Prospects Sale']];
+		  	 // console.log(r.message.sales_order_total[0]);
+		  	 for(var x in r.message.order_total){
+  				mydata.push(r.message.order_total[x]);
+               }
+               // console.log(mydata)
+		    var data = google.visualization.arrayToDataTable(mydata);
+		    var options = {
+		      title: 'Prospects Sale'
+		    };
+		    var chart = new google.visualization.ColumnChart(document.getElementById("column_tab3"));
+		    chart.draw(data, options);
+		    }
+		    }
+	    });
+	},
+	make_pie_chart4:function(from_date,to_date,country){
 		console.log("in the fun");
 		frappe.call({
 			method:"frappe.core.page.graphical_chart.graphical_chart.get_subscription",
 			args: {
 					from_date:from_date,
-					to_date:to_date
+					to_date:to_date,
+					country:country
 				},
 			callback: function(r) {
-				console.log(r.message);
+				console.log(typeof(r.message));
 			var options = {packages: ['corechart'], callback : drawChart};
 		    google.load('visualization', '1', options);
 		    function drawChart() {
@@ -209,79 +242,22 @@ frappe.Chart = Class.extend({
                // console.log(mydata)
 		    var data = google.visualization.arrayToDataTable(mydata);
 		    var options = {
-		      title: 'Sales Activities'
+		      title: 'Subscription Activities'
 		    };
-		    var chart = new google.visualization.PieChart(document.getElementById('pie_tab3'));
+		    var chart = new google.visualization.PieChart(document.getElementById('pie_tab4'));
 		    chart.draw(data, options);
 		  }
 		  	}
 	    });
 		},
 
-	make_column_chart3:function(from_date,to_date){
+	make_column_chart4:function(from_date,to_date,country){
 		    frappe.call({
 			method:"frappe.core.page.graphical_chart.graphical_chart.get_subscription",
 			args: {
 					from_date:from_date,
-					to_date:to_date
-				},
-			callback: function(r) {
-			console.log(r.message);
-			var options = {packages: ['corechart'], callback : drawChart};
-		    google.load('visualization', '1', options);
-		    // google.setOnLoadCallback(drawChart);
-		    function drawChart() {
-		  	 mydata=[['sales','Expenses']];
-		  	 // console.log(r.message.sales_order_total[0]);
-		  	 for(var x in r.message.order_total){
-  				mydata.push(r.message.order_total[x]);
-               }
-               // console.log(mydata)
-		    var data = google.visualization.arrayToDataTable(mydata);
-		    var options = {
-		      title: 'Sales Activities'
-		    };
-		    var chart = new google.visualization.ColumnChart(document.getElementById("column_tab3"));
-		    chart.draw(data, options);
-		    }
-		    }
-	    });
-	},
-	make_pie_chart4:function(from_date,to_date){
-		console.log("in the fun");
-		frappe.call({
-			method:"frappe.core.page.graphical_chart.graphical_chart.get_data",
-			args: {
-					from_date:from_date,
-					to_date:to_date
-				},
-			callback: function(r) {
-				console.log(typeof(r.message));
-			var options = {packages: ['corechart'], callback : drawChart};
-		    google.load('visualization', '1', options);
-		    function drawChart() {
-		  	 mydata=[['sales','Expenses']];
-		   	 for(var x in r.message.sales_order_total){
-  				mydata.push(r.message.sales_order_total[x]);
-               }
-               // console.log(mydata)
-		    var data = google.visualization.arrayToDataTable(mydata);
-		    var options = {
-		      title: 'Sales Activities'
-		    };
-		    var chart = new google.visualization.PieChart(document.getElementById('pie_tab4'));
-		    chart.draw(data, options);
-		  }
-		  	}
-	    });
-		},
-
-	make_column_chart4:function(from_date,to_date){
-		    frappe.call({
-			method:"frappe.core.page.graphical_chart.graphical_chart.get_data",
-			args: {
-					from_date:from_date,
-					to_date:to_date
+					to_date:to_date,
+					country:country
 				},
 			callback: function(r) {
 				console.log(typeof(r.message));
@@ -291,13 +267,13 @@ frappe.Chart = Class.extend({
 		    function drawChart() {
 		  	 mydata=[['sales','Expenses']];
 		  	 // console.log(r.message.sales_order_total[0]);
-		  	 for(var x in r.message.sales_order_total){
-  				mydata.push(r.message.sales_order_total[x]);
+		  	 for(var x in r.message.order_total){
+  				mydata.push(r.message.order_total[x]);
                }
                // console.log(mydata)
 		    var data = google.visualization.arrayToDataTable(mydata);
 		    var options = {
-		      title: 'Sales Activities'
+		      title: 'Subscription Activities'
 		    };
 		    var chart = new google.visualization.ColumnChart(document.getElementById("column_tab4"));
 		    chart.draw(data, options);
@@ -305,134 +281,15 @@ frappe.Chart = Class.extend({
 		    }
 	    });
 	},
-	make_column_chart2:function(from_date,to_date){
-	frappe.call({
-			method:"frappe.core.page.graphical_chart.graphical_chart.get_jv_data",
-			args: {
-					from_date:from_date,
-					to_date:to_date
-				},
-			callback: function(r) {
-				console.log(typeof(r.message));
-
-			var options = {packages: ['corechart'], callback : drawChart};
-		    google.load('visualization', '1', options);
-		    // google.setOnLoadCallback(drawChart);
-		    function drawChart() {
-		  	 mydata=[['sales','Expenses']];
-		  	 console.log(r.message.order_total[0]);
-		  	 for(var x in r.message.order_total){
-  				mydata.push(r.message.order_total[x]);
-               }
-		    var data = google.visualization.arrayToDataTable(mydata);
-		    var options = {
-		      title: 'Revenue Activities'
-		    };
-		    var chart = new google.visualization.ColumnChart(document.getElementById("column_tab2"));
-		    chart.draw(data, options);
-		  }
-		}
-	});
-	},
-	make_pie_chart2:function(from_date,to_date){
-		    console.log("in the pie chart two");
-
-			frappe.call({
-			method:"frappe.core.page.graphical_chart.graphical_chart.get_jv_data",
-			args: {
-					from_date:from_date,
-					to_date:to_date
-				},
-			callback: function(r) {
-				console.log(typeof(r.message));
-
-			var options = {packages: ['corechart'], callback : drawChart};
-		    google.load('visualization', '1', options);
-		    // google.setOnLoadCallback(drawChart);
-		    function drawChart() {
-		  	 mydata=[['sales','Expenses']];
-		  	 console.log(r.message.order_total[0]);
-		  	 for(var x in r.message.order_total){
-  				mydata.push(r.message.order_total[x]);
-               }
-		    var data = google.visualization.arrayToDataTable(mydata);
-		    var options = {
-		      title: 'Revenue Activities'
-		    };
-		    var chart = new google.visualization.PieChart(document.getElementById('pie_tab2'));
-		    chart.draw(data, options);
-		  }
-		}
-	});
-	},
-	make_column_chart4:function(from_date,to_date){
-	frappe.call({
-			method:"frappe.core.page.graphical_chart.graphical_chart.get_jv_data",
-			args: {
-					from_date:from_date,
-					to_date:to_date
-				},
-			callback: function(r) {
-				console.log(typeof(r.message));
-
-			var options = {packages: ['corechart'], callback : drawChart};
-		    google.load('visualization', '1', options);
-		    // google.setOnLoadCallback(drawChart);
-		    function drawChart() {
-		  	 mydata=[['sales','Expenses']];
-		  	 console.log(r.message.order_total[0]);
-		  	 for(var x in r.message.order_total){
-  				mydata.push(r.message.order_total[x]);
-               }
-		    var data = google.visualization.arrayToDataTable(mydata);
-		    var options = {
-		      title: 'Revenue Activities'
-		    };
-		    var chart = new google.visualization.ColumnChart(document.getElementById("column_tab4"));
-		    chart.draw(data, options);
-		  }
-		}
-	});
-	},
-	make_pie_chart4:function(from_date,to_date){
-		    console.log("in the pie chart two");
-
-			frappe.call({
-			method:"frappe.core.page.graphical_chart.graphical_chart.get_jv_data",
-			args: {
-					from_date:from_date,
-					to_date:to_date
-				},
-			callback: function(r) {
-				console.log(typeof(r.message));
-
-			var options = {packages: ['corechart'], callback : drawChart};
-		    google.load('visualization', '1', options);
-		    // google.setOnLoadCallback(drawChart);
-		    function drawChart() {
-		  	 mydata=[['sales','Expenses']];
-		  	 console.log(r.message.order_total);
-		  	 console.log(r.message.order_total[0]);
-		  	 for(var x in r.message.order_total){
-  				mydata.push(r.message.order_total[x]);
-               }
-		    var data = google.visualization.arrayToDataTable(mydata);
-		    var options = {
-		      title: 'Revenue Activities'
-		    };
-		    var chart = new google.visualization.PieChart(document.getElementById('pie_tab4'));
-		    chart.draw(data, options);
-		  }
-		}
-	});
-	},
-	make_column_chart5:function(from_date,to_date){
+	make_column_chart5:function(from_date,to_date,country){
 		console.log("in the column chart 5");
+		console.log(country);
 	frappe.call({
-			method:"frappe.core.page.graphical_chart.graphical_chart.get_data_newsale",
+			method:"frappe.core.page.graphical_chart.graphical_chart.get_data_newsalecol",
 			args: {
 					from_date:from_date,
-					to_date:to_date
+					to_date:to_date,
+					country:country,
 				},
 			callback: function(r) {
 				console.log(typeof(r.message));
@@ -441,14 +298,16 @@ frappe.Chart = Class.extend({
 		    google.load('visualization', '1', options);
 		    // google.setOnLoadCallback(drawChart);
 		    function drawChart() {
-		  	 mydata=[['Year','Count']];
+		  	 mydata=[['Year','Lead','Customer']];
 		  	 console.log("in the sales function");
 		  	 for(var x in r.message.order_total){
   				mydata.push(r.message.order_total[x]);
                }
+              console.log("data")
+            console.log(mydata)   
 		    var data = google.visualization.arrayToDataTable(mydata);
 		    var options = {
-		      title: 'Revenue Activities'
+		      title: 'Lead/Customer Details'
 		    };
 		    var chart = new google.visualization.ColumnChart(document.getElementById("column_tab5"));
 		    chart.draw(data, options);
@@ -456,30 +315,31 @@ frappe.Chart = Class.extend({
 		}
 	});
 	},
-	make_pie_chart5:function(from_date,to_date){
+	make_pie_chart5:function(from_date,to_date,country){
 		    console.log("in the pie chart 5");
-
+		    console.log(country);
 			frappe.call({
-			method:"frappe.core.page.graphical_chart.graphical_chart.get_data_newsale",
+			method:"frappe.core.page.graphical_chart.graphical_chart.get_data_newsalepie",
 			args: {
 					from_date:from_date,
-					to_date:to_date
+					to_date:to_date,
+					country:country
 				},
 			callback: function(r) {
-				console.log(typeof(r.message));
+				console.log(r.message);
 
 			var options = {packages: ['corechart'], callback : drawChart};
 		    google.load('visualization', '1', options);
 		    // google.setOnLoadCallback(drawChart);
 		    function drawChart() {
-		  	 mydata=[['sales','Expenses']];
+		  	 mydata=[['Month','Count']];
 		  	 console.log(r.message.order_total[0]);
 		  	 for(var x in r.message.order_total){
   				mydata.push(r.message.order_total[x]);
                }
 		    var data = google.visualization.arrayToDataTable(mydata);
 		    var options = {
-		      title: 'Revenue Activities'
+		      title: 'New Sales(Lead) Activities'
 		    };
 		    var chart = new google.visualization.PieChart(document.getElementById('pie_tab5'));
 		    chart.draw(data, options);
@@ -490,45 +350,30 @@ frappe.Chart = Class.extend({
 
 	make_link: function(){
 		var me = this;
-
     	this.country = this.wrapper.appframe.add_field({
 			fieldname: "country",
 			label: __("Country"),
 			fieldtype: "Link",
 			options: "Country"
-		});
-
-		
-		this.from_date = this.wrapper.appframe.add_date(
-			"From Date");
-
-		
-		this.to_date = this.wrapper.appframe.add_date(
+		});		
+		this.sales_from_date = this.wrapper.appframe.add_date(
+			"From Date");		
+		this.sales_to_date = this.wrapper.appframe.add_date(
 			"To Date").change(function()
 			 {	
-
-			 	var from_date=me.from_date.val();
+			 	var from_date=me.sales_from_date.val();
 			 	var to_date=$(this).val();
-			 	if(from_date < to_date)
-			 	
+			 	if(from_date < to_date)			 	
 			 	{
 			 	console.log("in same ");
 			 	me.make_pie_chart(from_date,to_date)
 				me.make_column_chart(from_date,to_date)
 				}else
-				{
-					
+				{					
 					msgprint(__("Please enter valid date."));
 				}
 				});
-		// this.country = this.wrapper.appframe.add_field({
-		// 	fieldname: "currency",
-		// 	label: __("Currency"),
-		// 	fieldtype: "Link",
-		// 	options: "Currency"
-		// });
-
-
+	
 		this.currency= this.wrapper.appframe.add_field({
 			fieldname: "currency",
 			label: __("Currency"),
@@ -537,110 +382,33 @@ frappe.Chart = Class.extend({
 		});
 		
 		this.currency.$input.on("change", function() {
-			    var from_date=me.from_date.val();
-			    var to_date=me.to_date.val();
+			    var from_date=me.sales_from_date.val();
+			    var to_date=me.sales_to_date.val();
 			 	var currency=$(this).val();
+			 	// var country=$(this).val();
 			 	console.log("nt the 2nd");
 			 	console.log(to_date);
 			 	console.log(currency);
 			 	me.make_pie_chart(from_date,to_date,currency)
 				me.make_column_chart(from_date,to_date,currency)
 				console.log("hh");
-		});		
+		});	
 
-	
+
+		this.country.$input.on("change", function() {
+			    var from_date=me.sales_from_date.val();
+			    var to_date=me.sales_to_date.val();
+			    var currency=me.currency.$input.val();
+			 	var country=$(this).val();
+			 	console.log("nt the 2nd");
+			 	console.log(currency);
+			 	console.log(country);
+			 	me.make_pie_chart(from_date,to_date,currency,country)
+				me.make_column_chart(from_date,to_date,currency,country)
+				console.log("hh");
+		});			
 	
     },
-	make_revenue_menu: function(){
-		var me = this;
-
-    	this.revenue_field=frappe.ui.form.make_control({
-		df: {
-		    "fieldtype": "Link",
-			"options": "Country",
-			"label": "Country",
-			"fieldname": "country",
-			"placeholder": "Country"
-	// "only_input":true
-			},
-		"only_input":true,
-		parent:$(me.wrapper).find("#ctab"),
-		});
-		this.revenue_field.make_input();
-		$(this.wrapper).find("#ctab").css("width","200px");
-
-		this.revenue_field1=frappe.ui.form.make_control({
-		df: {
-		    "fieldtype": "Date",
-			"label": "From Date",
-			"fieldname": "from_date",
-			"placeholder": "From Date"
-			},
-		parent:$(me.wrapper).find("#ctab1"),
-		});
-		this.revenue_field1.make_input();
-		 $(this.wrapper).find("#ctab1").css("width","200px");
-
-		this.revenue_field2=frappe.ui.form.make_control({
-		df: {
-		    "fieldtype": "Date",
-			"label": "To Date",
-			"fieldname": "to_date",
-			"placeholder": "To Date"
-			},
-		parent:$(me.wrapper).find("#ctab2"),
-		});
-		this.revenue_field2.make_input();
-		$(this.wrapper).find("#ctab2").css("width","200px");
-
-		this.revenue_field3=frappe.ui.form.make_control({
-		df: {
-		    "fieldtype": "Link",
-			"options": "Currency",
-			"label": "Currency",
-			"fieldname": "Currency",
-			"placeholder": "Currency"
-	// "only_input":true
-			},
-		"only_input":true,
-		parent:$(me.wrapper).find("#ctab3"),
-		});
-		this.revenue_field3.make_input();
-		$(this.wrapper).find("#ctab3").css("width","200px");
-
-
-
-        this.revenue_field2.$input.on("change", function() {
-			    var from_date=me.revenue_field1.$input.val();
-			 	var to_date=$(this).val();
-			 	console.log("nt the 2nd");
-			 	console.log(to_date);
-			 	
-				if(from_date < to_date)
-			 	
-			 	{
-			 	console.log("in same ");
-			 	me.make_pie_chart2(from_date,to_date)
-				me.make_column_chart2(from_date,to_date)
-				}else
-				{
-					
-					msgprint(__("Please enter valid date."));
-				}
-		});
-
-
-        this.revenue_field3.$input.on("change", function() {
-			    var from_date=me.revenue_field1.$input.val();
-			    var to_date=me.revenue_field1.$input.val();
-			 	var currency=$(this).val();
-			 	console.log("nt the 2nd");
-			 	console.log(to_date);
-			 	me.make_pie_chart2(from_date,to_date)
-				me.make_column_chart2(from_date,to_date)
-		});
-
-},
 		make_menu2: function(){
 		var me = this;
 
@@ -683,22 +451,7 @@ frappe.Chart = Class.extend({
 		this.prosp_field2.make_input();
 		$(this.wrapper).find("#ctab22").css("width","100%");
 
-		this.prosp_field=frappe.ui.form.make_control({
-		df: {
-		    "fieldtype": "Link",
-			"options": "Currency",
-			"label": "Currency",
-			"fieldname": "Currency",
-			"placeholder": "Currency"
-	// "only_input":true
-			},
-		"only_input":true,
-		parent:$(me.wrapper).find("#ctab322"),
-		});
-		this.prosp_field.make_input();
-		$(this.wrapper).find("#ctab322").css("width","200px");
-
-         this.prosp_field2.$input.on("change", function() {
+        this.prosp_field2.$input.on("change", function() {
          	    var from_date=me.prosp_field1.$input.val();
 			 	var to_date=$(this).val();
 			 	console.log("in the menu2");
@@ -706,12 +459,23 @@ frappe.Chart = Class.extend({
 			 	me.make_pie_chart3(from_date,to_date)
 				me.make_column_chart3(from_date,to_date)
 		});
+		this.prosp_field.$input.on("change", function() {
+         	    var from_date=me.prosp_field1.$input.val();
+			 	var to_date=me.prosp_field2.$input.val();
+			 	var country=$(this).val();
+
+
+			 	console.log("in the menu2");
+			 	// console.log(to_date);
+			 	me.make_pie_chart3(from_date,to_date,country)
+				me.make_column_chart3(from_date,to_date,country)
+		});
 
 	},
 	make_menu4: function(){
 		var me = this;
 
-    	this.menu_field=frappe.ui.form.make_control({
+    	this.country=frappe.ui.form.make_control({
 		df: {
 		    "fieldtype": "Link",
 			"options": "Country",
@@ -723,10 +487,10 @@ frappe.Chart = Class.extend({
 		"only_input":true,
 		parent:$(me.wrapper).find("#ctab44"),
 		});
-		this.menu_field.make_input();
+		this.country.make_input();
 		$(this.wrapper).find("#ctab44").css("width","60%");
 
-		this.group_field1=frappe.ui.form.make_control({
+		this.pros_from_date=frappe.ui.form.make_control({
 		df: {
 		    "fieldtype": "Date",
 			"label": "From Date",
@@ -735,10 +499,10 @@ frappe.Chart = Class.extend({
 			},
 		parent:$(me.wrapper).find("#ctab144"),
 		});
-		this.group_field1.make_input();
+		this.pros_from_date.make_input();
 		 $(this.wrapper).find("#ctab144").css("width","100%");
 
-		this.group_field2=frappe.ui.form.make_control({
+		this.pros_to_date=frappe.ui.form.make_control({
 		df: {
 		    "fieldtype": "Date",
 			"label": "To Date",
@@ -747,38 +511,32 @@ frappe.Chart = Class.extend({
 			},
 		parent:$(me.wrapper).find("#ctab244"),
 		});
-		this.group_field2.make_input();
+		this.pros_to_date.make_input();
 		 $(this.wrapper).find("#ctab244").css("width","100%");
 
-	    this.menu_field=frappe.ui.form.make_control({
-		df: {
-		    "fieldtype": "Link",
-			"options": "Currency",
-			"label": "Currency",
-			"fieldname": "Currency",
-			"placeholder": "Currency"
-	// "only_input":true
-			},
-		"only_input":true,
-		parent:$(me.wrapper).find("#ctab344"),
-		});
-		this.menu_field.make_input();
-		$(this.wrapper).find("#ctab344").css("width","200px");
-
-        this.group_field2.$input.on("change", function() {
-			    var from_date=me.group_field1.$input.val();
+        this.pros_to_date.$input.on("change", function() {
+			    var from_date=me.pros_from_date.$input.val();
 			 	var to_date=$(this).val();
+			 	var country=me.country.$input.val(); 
 			 	console.log("in the Prospects");
+			 	console.log(from_date);
+			 	me.make_pie_chart4(from_date,to_date,country)
+				me.make_column_chart4(from_date,to_date,country)
+		});
+
+		this.country.$input.on("change", function() {
+				var from_date=me.pros_from_date.$input.val();
+			    var to_date=me.pros_to_date.$input.val();
+			    var country=$(this).val();	
 			 	console.log(to_date);
-			 	me.make_pie_chart3(from_date,to_date)
-				me.make_column_chart3(from_date,to_date)
+			 	me.make_pie_chart4(from_date,to_date,country)
+				me.make_column_chart4(from_date,to_date,country)
 		});
 
 	},
 		make_menu5: function(){
 		var me = this;
-
-    	this.menu_field=frappe.ui.form.make_control({
+    	this.country=frappe.ui.form.make_control({
 		df: {
 		    "fieldtype": "Link",
 			"options": "Country",
@@ -790,10 +548,10 @@ frappe.Chart = Class.extend({
 		"only_input":true,
 		parent:$(me.wrapper).find("#ctab55"),
 		});
-		this.menu_field.make_input();
+		this.country.make_input();
 		$(this.wrapper).find("#ctab55").css("width","60%");
 
-		this.group_field1=frappe.ui.form.make_control({
+		this.from_date=frappe.ui.form.make_control({
 		df: {
 		    "fieldtype": "Date",
 			"label": "From Date",
@@ -802,10 +560,10 @@ frappe.Chart = Class.extend({
 			},
 		parent:$(me.wrapper).find("#ctab155"),
 		});
-		this.group_field1.make_input();
+		this.from_date.make_input();
 		 $(this.wrapper).find("#ctab155").css("width","100%");
 
-		this.group_field2=frappe.ui.form.make_control({
+		this.to_date=frappe.ui.form.make_control({
 		df: {
 		    "fieldtype": "Date",
 			"label": "To Date",
@@ -814,33 +572,30 @@ frappe.Chart = Class.extend({
 			},
 		parent:$(me.wrapper).find("#ctab255"),
 		});
-		this.group_field2.make_input();
+		this.to_date.make_input();
 		 $(this.wrapper).find("#ctab255").css("width","100%");
 
-	    this.menu_field=frappe.ui.form.make_control({
-		df: {
-		    "fieldtype": "Link",
-			"options": "Currency",
-			"label": "Currency",
-			"fieldname": "Currency",
-			"placeholder": "Currency"
-	// "only_input":true
-			},
-		"only_input":true,
-		parent:$(me.wrapper).find("#ctab355"),
-		});
-		this.menu_field.make_input();
-		$(this.wrapper).find("#ctab355").css("width","200px");
-
-        this.group_field2.$input.on("change", function() {
-			    var from_date=me.group_field1.$input.val();
+        this.to_date.$input.on("change", function() {
+			    var from_date=me.from_date.$input.val();
 			 	var to_date=$(this).val();
+			 	var country=me.country.$input.val();
+			 	console.log("in the menu5");
+			 	console.log(from_date);
+			 	console.log(country);
+			 	me.make_pie_chart5(from_date,to_date,country)
+				me.make_column_chart5(from_date,to_date,country)
+		});
+
+		this.country.$input.on("change", function() {
+			    var from_date=me.from_date.$input.val();
+			 	var to_date=me.to_date.$input.val();
+			 	var country=$(this).val();
 			 	console.log("in the menu5");
 			 	console.log(to_date);
-			 	me.make_pie_chart5(from_date,to_date)
-				me.make_column_chart5(from_date,to_date)
+			 	console.log(country);
+			 	me.make_pie_chart5(from_date,to_date,country)
+				me.make_column_chart5(from_date,to_date,country)
 		});
-
 	},
 	show_active_users: function() {
 		var me = this;
@@ -868,10 +623,7 @@ frappe.Chart = Class.extend({
 				}
 			}
 		});
-	},
-
-
-	
+	},	
 });
 
 

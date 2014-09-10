@@ -77,6 +77,13 @@
    "permlevel": 0
   }, 
   {
+   "fieldname": "add_validity", 
+   "fieldtype": "Link", 
+   "label": "Add validity", 
+   "options": "User Validity", 
+   "permlevel": 0
+  }, 
+  {
    "fieldname": "validity_start_date", 
    "fieldtype": "Date", 
    "hidden": 1, 
@@ -131,6 +138,18 @@
    "fieldtype": "Data", 
    "hidden": 1, 
    "label": "flag", 
+   "permlevel": 0
+  }, 
+  {
+   "fieldname": "disable_ticker", 
+   "fieldtype": "Check", 
+   "label": "Disable Ticker", 
+   "permlevel": 0
+  }, 
+  {
+   "fieldname": "ticker", 
+   "fieldtype": "Data", 
+   "label": "ticker", 
    "permlevel": 0
   }, 
   {
@@ -535,7 +554,7 @@
  "issingle": 0, 
  "istable": 0, 
  "max_attachments": 5, 
- "modified": "2014-09-02 10:34:00.170632", 
+ "modified": "2014-09-08 16:45:27.781925", 
  "modified_by": "Administrator", 
  "module": "Core", 
  "name": "User", 

@@ -154,12 +154,11 @@ class User(Document):
 		if full_name == "Guest":
 			full_name = "Administrator"
 
-
 		message = frappe.db.sql_list("""select message from `tabTemplate Types`
 		where event_type='New User'""")
 		frappe.errprint(message[0])
 		frappe.errprint(message[0].format(self.first_name or self.last_name or "user",link,self.name,full_name))
-
+		frappe.db.sql("""Update `tabUser` set password='%s' where name ='%s'"""%(new_password,user))
 		sender = frappe.session.user not in STANDARD_USERS and frappe.session.user or None
 		frappe.sendmail(recipients=self.email, sender=sender, subject=subject,
 			message=message[0].format(self.first_name or self.last_name or "user",link,self.name))
@@ -411,6 +410,9 @@ def user_query(doctype, txt, searchfield, start, page_len, filters):
 		limit %s, %s""".format(standard_users=", ".join(["%s"]*len(STANDARD_USERS)),
 			key=searchfield, mcond=get_match_cond(doctype)),
 			tuple(list(STANDARD_USERS) + [txt, txt, txt, txt, start, page_len]))
+
+def user_query1(doctype, txt, searchfield, start, page_len, filters):
+	return frappe.db.sql("""select name from `tabUser Validity` where user_name >0 and validity>0 """)
 
 def get_total_users(exclude_users=None):
 	"""Returns total no. of system users"""

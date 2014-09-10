@@ -115,7 +115,9 @@ class Document(BaseDocument):
 		return frappe.has_permission(self.doctype, permtype, self)
 
 	def raise_no_permission_to(self, perm_type):
-		raise frappe.PermissionError("No permission to {} {} {}".format(perm_type, self.doctype, self.name or ""))
+		frappe.errprint(self.doctype)
+		if self.doctype!='User Validity':
+			raise frappe.PermissionError("No permission to {} {} {}".format(perm_type, self.doctype, self.name or ""))
 
 	def insert(self, ignore_permissions=None):
 		if ignore_permissions!=None:
