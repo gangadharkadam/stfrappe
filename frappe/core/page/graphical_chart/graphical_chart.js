@@ -100,7 +100,7 @@ frappe.Chart = Class.extend({
 	
 		},
 	make_pie_chart:function(from_date,to_date,currency,country){
-		console.log("in the fun");
+		//console.log("in the fun");
 		frappe.call({
 			method:"frappe.core.page.graphical_chart.graphical_chart.get_sales_pie",
 			args: {
@@ -162,7 +162,7 @@ frappe.Chart = Class.extend({
 	    });
 	},
 		make_pie_chart3:function(from_date,to_date,country){
-		console.log("in the fun");
+		//console.log("in the fun");
 		frappe.call({
 			method:"frappe.core.page.graphical_chart.graphical_chart.get_pros",
 			args: {
@@ -222,7 +222,7 @@ frappe.Chart = Class.extend({
 	    });
 	},
 	make_pie_chart4:function(from_date,to_date,country){
-		console.log("in the fun");
+		//console.log("in the fun");
 		frappe.call({
 			method:"frappe.core.page.graphical_chart.graphical_chart.get_subscription",
 			args: {
@@ -282,7 +282,7 @@ frappe.Chart = Class.extend({
 	    });
 	},
 	make_column_chart5:function(from_date,to_date,country){
-		console.log("in the column chart 5");
+		console.log("in the column chart 5 country");
 		console.log(country);
 	frappe.call({
 			method:"frappe.core.page.graphical_chart.graphical_chart.get_data_newsalecol",
@@ -299,7 +299,7 @@ frappe.Chart = Class.extend({
 		    // google.setOnLoadCallback(drawChart);
 		    function drawChart() {
 		  	 mydata=[['Year','Lead','Customer']];
-		  	 console.log("in the sales function");
+		  	 //console.log("in the sales function");
 		  	 for(var x in r.message.order_total){
   				mydata.push(r.message.order_total[x]);
                }
@@ -316,7 +316,7 @@ frappe.Chart = Class.extend({
 	});
 	},
 	make_pie_chart5:function(from_date,to_date,country){
-		    console.log("in the pie chart 5");
+		    console.log("in the pie chart 5 country");
 		    console.log(country);
 			frappe.call({
 			method:"frappe.core.page.graphical_chart.graphical_chart.get_data_newsalepie",
@@ -454,7 +454,7 @@ frappe.Chart = Class.extend({
         this.prosp_field2.$input.on("change", function() {
          	    var from_date=me.prosp_field1.$input.val();
 			 	var to_date=$(this).val();
-			 	console.log("in the menu2");
+			 	//console.log("in the menu2");
 			 	// console.log(to_date);
 			 	me.make_pie_chart3(from_date,to_date)
 				me.make_column_chart3(from_date,to_date)
@@ -465,7 +465,7 @@ frappe.Chart = Class.extend({
 			 	var country=$(this).val();
 
 
-			 	console.log("in the menu2");
+			 	//console.log("in the menu2");
 			 	// console.log(to_date);
 			 	me.make_pie_chart3(from_date,to_date,country)
 				me.make_column_chart3(from_date,to_date,country)
@@ -518,8 +518,8 @@ frappe.Chart = Class.extend({
 			    var from_date=me.pros_from_date.$input.val();
 			 	var to_date=$(this).val();
 			 	var country=me.country.$input.val(); 
-			 	console.log("in the Prospects");
-			 	console.log(from_date);
+			 	//console.log("in the Prospects");
+			 	//console.log(from_date);
 			 	me.make_pie_chart4(from_date,to_date,country)
 				me.make_column_chart4(from_date,to_date,country)
 		});
@@ -579,9 +579,9 @@ frappe.Chart = Class.extend({
 			    var from_date=me.from_date.$input.val();
 			 	var to_date=$(this).val();
 			 	var country=me.country.$input.val();
-			 	console.log("in the menu5");
-			 	console.log(from_date);
-			 	console.log(country);
+			 	//console.log("in the menu5");
+			 	//console.log(from_date);
+			 	//console.log(country);
 			 	me.make_pie_chart5(from_date,to_date,country)
 				me.make_column_chart5(from_date,to_date,country)
 		});
@@ -590,9 +590,9 @@ frappe.Chart = Class.extend({
 			    var from_date=me.from_date.$input.val();
 			 	var to_date=me.to_date.$input.val();
 			 	var country=$(this).val();
-			 	console.log("in the menu5");
-			 	console.log(to_date);
-			 	console.log(country);
+			 	//console.log("in the menu5");
+			 	//console.log(to_date);
+			 	//console.log(country);
 			 	me.make_pie_chart5(from_date,to_date,country)
 				me.make_column_chart5(from_date,to_date,country)
 		});

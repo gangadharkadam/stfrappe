@@ -10,7 +10,7 @@ def get_children(from_date, to_date):
 	if args['parent'] == 'Users':
 		acc = frappe.db.sql("""select concat('<b>',name,'</b> : ', 
 				email_id__if_administrator) as value, 1 as expandable 
-			from `tabSite Master`""", as_dict=1)
+			from `tabSite Master` %s """%(get_parent_cond(from_date, to_date)), as_dict=1)
 
 	else: 
 		acc	= frappe.db.sql(""" select name as value, 0 as expandable 
@@ -18,6 +18,11 @@ def get_children(from_date, to_date):
 				get_cond(from_date, to_date)), as_dict=1)
 
 	return acc
+
+def get_parent_cond(from_date,to_date):
+	if from_date and to_date:
+		return " where expiry_date between '%s' and '%s'"%(format_date(cstr(from_date)), format_date(cstr(to_date)))
+	return "where expiry_date between curdate() and  DATE_ADD(curdate(), INTERVAL 7 DAY)"
 
 def get_cond(from_date, to_date):
 	if from_date and to_date:

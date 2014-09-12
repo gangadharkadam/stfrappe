@@ -152,11 +152,14 @@ def clear_outbox():
 
 
 def multitenanct(from_test=False):
-   res=frappe.db.sql("""select name from `tabSite Master` where flag=0 limit 1 """)
+   frappe.errprint("creating sites")
+   res=frappe.db.sql("""select name from `tabSite Master` where flag=0 limit 1""")
+   frappe.errprint(res)
    if res:
+   	frappe.errprint(res)
 	sites=''
 	sites = frappe.db.sql("""select sites from  `tabUser` where name='administrator'""")
-	#print sites
+	print sites
 	auto_commit = not from_test
 	ste=res[0][0]
 	from frappe.utils import cstr  
@@ -250,14 +253,14 @@ def multitenanct(from_test=False):
     	from frappe.utils import nowdate,add_months,cint
     	en_dt=add_months(nowdate(),1)
 	qry="update `tabSite Master` set flag=1 ,expiry_date='"+en_dt+"' where name='"+cstr(res[0][0])+"'"
-	#frappe.errprint(qry)
+	frappe.errprint(qry)
 	frappe.db.sql(qry, auto_commit=auto_commit)
 	qry1="select email_id__if_administrator from `tabSite Master` where name='"+cstr(ste)+"'"
-	#frappe.errprint(qry1)
+	frappe.errprint(qry1)
 	rr=frappe.db.sql(qry1)
 	#frappe.errprint(rr[0][0])
 	eml=rr and rr[0][0] or ''
-	#frappe.errprint(eml)
+	frappe.errprint(eml)
 	frappe.get_doc({
 			"doctype":"SubAdmin Info",
 			"parent": "SUB0001",

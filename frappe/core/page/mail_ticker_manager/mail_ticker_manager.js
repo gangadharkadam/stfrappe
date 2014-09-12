@@ -20,7 +20,7 @@ frappe.pages['mail_ticker_manager'].onload = function(wrapper) {
 
 	wrapper.$from_date = wrapper.appframe.add_date('From Date');
 	wrapper.$to_date = wrapper.appframe.add_date('To Date');
-
+	erpnext.account_chart = new erpnext.AccountsChart(ctype, $(this).val(),	chart_area.get(0), mail_to, wrapper.$from_date.val(), wrapper.$to_date.val());
 	wrapper.$company_select = wrapper.appframe.add_select("Purpose", ['','Mail', 'Ticker'])
 		.change(function() {
 			erpnext.account_chart = new erpnext.AccountsChart(ctype, $(this).val(),	chart_area.get(0), mail_to, wrapper.$from_date.val(), wrapper.$to_date.val());
